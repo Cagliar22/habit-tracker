@@ -1,197 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Habit Tracker</title>
-  <style>
-    :root {
-      --bg: #0f1220;
-      --card: #1b1f3b;
-      --accent: #7c7cff;
-      --accent-2: #2dd4bf;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --success: #22c55e;
-      --warn: #facc15;
-      --danger: #f87171;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habit Tracker</title>
+<style>
+:root {
+  --bg: #0f1220;
+  --card: #1b1f3b;
+  --accent: #7c7cff;
+  --accent-2: #2dd4bf;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --success: #22c55e;
+  --warn: #facc15;
+  --danger: #f87171;
+}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
-      background: linear-gradient(180deg, var(--bg), #14173a);
-      color: var(--text);
-    }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
+  background: linear-gradient(180deg, var(--bg), #14173a);
+  color: var(--text);
+}
 
-    .app {
-      max-width: 420px;
-      margin: auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+.app {
+  max-width: 420px;
+  margin: auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-    header {
-      padding: 20px;
-      text-align: center;
-      font-size: 1.4rem;
-      font-weight: 600;
-    }
+header {
+  padding: 20px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
 
-    main {
-      flex: 1;
-      padding: 16px;
-    }
+main {
+  flex: 1;
+  padding: 16px;
+}
 
-    .card {
-      background: linear-gradient(135deg, #1b1f3b, #232861);
-      border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
+.card {
+  background: linear-gradient(135deg, #1b1f3b, #232861);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
 
-    .habit {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      cursor: grab;
-    }
+.habit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: grab;
+}
 
-    .habit.dragging { opacity: 0.5; }
+.habit.dragging { opacity: 0.5; }
 
-    .habit button {
-      background: var(--accent);
-      border: none;
-      color: white;
-      border-radius: 12px;
-      padding: 8px 14px;
-      font-weight: 600;
-    }
+.habit button {
+  background: var(--accent);
+  border: none;
+  color: white;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
 
-    .progress {
-      width: 100%;
-      height: 10px;
-      background: #111827;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
+.progress {
+  width: 100%;
+  height: 10px;
+  background: #111827;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 8px;
+}
 
-    .progress div {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      width: 0%;
-      transition: width 0.4s;
-    }
+.progress div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  width: 0%;
+  transition: width 0.4s;
+}
 
-    .tabs {
-      display: flex;
-      border-top: 1px solid #1f2937;
-      background: #0b0e1a;
-    }
+.tabs {
+  display: flex;
+  border-top: 1px solid #1f2937;
+  background: #0b0e1a;
+}
 
-    .tab {
-      flex: 1;
-      padding: 14px;
-      text-align: center;
-      font-weight: 600;
-      color: var(--muted);
-    }
+.tab {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--muted);
+}
 
-    .tab.active { color: var(--accent); }
+.tab.active { color: var(--accent); }
+.hidden { display: none; }
 
-    .hidden { display: none; }
+.add {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 8px;
+}
 
-    .add {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-    }
+.add input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #1b1f3b;
+  color: var(--text);
+}
 
-    .add input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-    }
+.add button {
+  background: var(--accent-2);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+}
 
-    .add button {
-      background: var(--accent-2);
-      border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 600;
-    }
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 10px;
+}
 
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      margin-top: 10px;
-    }
+.day {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text);
+  background: #1b1f3b;
+}
+.day.empty { background: transparent; color: transparent; }
+.day.green { background: var(--success); }
+.day.yellow { background: var(--warn); }
+.day.red { background: var(--danger); }
+.day.today { outline: 2px solid var(--accent); }
 
-    .day {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      color: var(--text);
-      background: #1b1f3b;
-    }
+.confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 999; }
+.confetti span {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: hsl(var(--h), 90%, 60%);
+  border-radius: 50%;
+  animation: fall 1s cubic-bezier(.2,.8,.2,1) forwards;
+}
 
-    .day.empty { background: transparent; color: transparent; }
-    .day.green { background: var(--success); }
-    .day.yellow { background: var(--warn); }
-    .day.red { background: var(--danger); }
-    .day.today { outline: 2px solid var(--accent); }
-
-    .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 999; }
-    .confetti span {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: hsl(var(--h), 90%, 60%);
-      border-radius: 50%;
-      animation: fall 1s cubic-bezier(.2,.8,.2,1) forwards;
-    }
-
-    @keyframes fall {
-      from { transform: translateY(-20px) rotate(0deg); }
-      to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-  </style>
+@keyframes fall {
+  from { transform: translateY(-20px) rotate(0deg); }
+  to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.dateNav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0;
+  font-weight: 600;
+}
+.dateNav button {
+  background: var(--accent-2);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: white;
+}
+</style>
 </head>
 <body>
 <div class="app">
   <header id="headerDate"></header>
   <main>
-    <!-- HOME VIEW -->
     <div id="homeView">
-      <div class="card" id="habitContainer"></div>
-      <div class="card">
-        <h3>Daily Progress</h3>
-        <div class="progress"><div id="dailyBar"></div></div>
-        <p id="streakText"></p>
-      </div>
-      <div class="add">
-        <input id="newHabit" placeholder="New habit" />
-        <button onclick="addHabit()">Add</button>
-      </div>
       <div class="dateNav">
         <button onclick="prevDay()">◀</button>
-        <button onclick="today()">Today</button>
+        <span id="currentDate"></span>
         <button onclick="nextDay()">▶</button>
       </div>
+      <div id="habitContainer" class="card"></div>
+      <div class="progress"><div id="dailyBar"></div></div>
+      <p id="streakText"></p>
+      <div class="add">
+        <input id="newHabit" placeholder="Add new habit" />
+        <button onclick="addHabit()">Add</button>
+      </div>
     </div>
-
-    <!-- MONTH VIEW -->
     <div id="monthView" class="hidden">
       <div class="card">
         <h3>Monthly Overview</h3>
@@ -206,27 +217,29 @@
 </div>
 <div class="confetti" id="confetti"></div>
 <script>
-let habits = JSON.parse(localStorage.getItem('habits')||'[]');
-let history = JSON.parse(localStorage.getItem('history')||'{}');
-let currentDate = new Date();
+let habits=JSON.parse(localStorage.getItem('habits')||'[]');
+let history=JSON.parse(localStorage.getItem('history')||'{}');
+let currentDate=new Date();
 
-function formatDate(d){return d.toLocaleDateString();}
-function today(){currentDate=new Date();render();}
-function prevDay(){currentDate.setDate(currentDate.getDate()-1);render();}
-function nextDay(){currentDate.setDate(currentDate.getDate()+1);render();}
+function formatDate(d){
+  return d.toLocaleString('en-US',{month:'short',day:'numeric'});
+}
+function today(){currentDate=new Date(); render();}
+function prevDay(){currentDate.setDate(currentDate.getDate()-1); render();}
+function nextDay(){currentDate.setDate(currentDate.getDate()+1); render();}
 
-function save(){localStorage.setItem('habits',JSON.stringify(habits));localStorage.setItem('history',JSON.stringify(history));}
+function save(){localStorage.setItem('habits',JSON.stringify(habits)); localStorage.setItem('history',JSON.stringify(history));}
 
 function render(){
-  document.getElementById('headerDate').innerText = formatDate(currentDate);
-  renderHabits();
-  renderMonth();
+  document.getElementById('headerDate').innerText=formatDate(currentDate);
+  document.getElementById('currentDate').innerText=formatDate(currentDate);
+  renderHabits(); renderMonth();
 }
 
 function renderHabits(){
-  const container = document.getElementById('habitContainer');
+  const container=document.getElementById('habitContainer');
   container.innerHTML='';
-  const key=currentDate.toISOString().slice(0,10);
+  const key=currentDate.toLocaleDateString('en-CA');
   if(!history[key]) history[key]={};
   habits.forEach((h,i)=>{
     const done=history[key][h]||false;
@@ -251,26 +264,21 @@ function renderHabits(){
 }
 
 function toggleHabit(h){
-  const key=currentDate.toISOString().slice(0,10);
+  const key=currentDate.toLocaleDateString('en-CA');
   history[key][h]=!history[key][h];
-  save();
-  renderHabits();
-  popConfetti();
+  save(); renderHabits(); popConfetti();
 }
 
 function addHabit(){
   const input=document.getElementById('newHabit');
   if(!input.value) return;
-  habits.push(input.value);
-  input.value='';
-  save();
-  renderHabits();
+  habits.push(input.value); input.value=''; save(); renderHabits();
 }
 
 function updateProgress(){
-  const key=currentDate.toISOString().slice(0,10);
-  const done=Object.values(history[key]).filter(Boolean).length;
-  const pct=habits.length?Math.round((done/habits.length)*100):0;
+  const key=currentDate.toLocaleDateString('en-CA');
+  const done=Object.values(history[key]||{}).filter(Boolean).length;
+  const pct=habits.length?Math.round(done/habits.length*100):0;
   document.getElementById('dailyBar').style.width=pct+'%';
   document.getElementById('streakText').innerText=`Completed ${pct}%`;
 }
@@ -278,8 +286,8 @@ function updateProgress(){
 function showTab(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('#homeView,#monthView').forEach(v=>v.classList.add('hidden'));
-  if(tab==='home'){document.getElementById('homeView').classList.remove('hidden');document.querySelectorAll('.tab')[0].classList.add('active');}
-  else{document.getElementById('monthView').classList.remove('hidden');document.querySelectorAll('.tab')[1].classList.add('active');renderMonth();}
+  if(tab==='home'){document.getElementById('homeView').classList.remove('hidden'); document.querySelectorAll('.tab')[0].classList.add('active');}
+  else{document.getElementById('monthView').classList.remove('hidden'); document.querySelectorAll('.tab')[1].classList.add('active'); renderMonth();}
 }
 
 function renderMonth(){
@@ -291,10 +299,8 @@ function renderMonth(){
   for(let i=0;i<firstDay;i++){const empty=document.createElement('div');empty.className='day empty';monthCal.appendChild(empty);}
   for(let i=1;i<=daysInMonth;i++){
     const day=new Date(d.getFullYear(),d.getMonth(),i);
-    const key=day.toISOString().slice(0,10);
-    const div=document.createElement('div');
-    div.className='day';
-    div.innerText=i;
+    const key=day.toLocaleDateString('en-CA');
+    const div=document.createElement('div'); div.className='day'; div.innerText=i;
     if(history[key]){
       const vals=Object.values(history[key]);
       const pct=vals.length?vals.filter(Boolean).length/vals.length:0;
@@ -302,7 +308,8 @@ function renderMonth(){
       else if(pct>=0.5) div.classList.add('yellow');
       else if(pct>0) div.classList.add('red');
     }
-    if(key===new Date().toISOString().slice(0,10)) div.classList.add('today');
+    const todayKey=new Date().toLocaleDateString('en-CA');
+    if(key===todayKey) div.classList.add('today');
     monthCal.appendChild(div);
   }
 }
