@@ -153,18 +153,16 @@ main {
   color: var(--text);
   background: #1b1f3b;
   border: 2px solid transparent;
+  box-sizing: border-box;
 }
 .day.empty { background: transparent; color: transparent; }
-.day.green { border-color: var(--success); }
-.day.orange { border-color: var(--orange); }
-.day.red { border-color: var(--red); }
 .day.today { outline: 2px solid var(--accent); }
 
 .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 999; }
 .confetti span {
   position: absolute;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   background: hsl(var(--h), 90%, 60%);
   border-radius: 50%;
   animation: fall 1s cubic-bezier(.2,.8,.2,1) forwards;
@@ -174,6 +172,7 @@ main {
   from { transform: translateY(-20px) rotate(0deg); }
   to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
+
 .dateNav {
   display: flex;
   justify-content: center;
@@ -244,12 +243,24 @@ function renderHabits(){
   container.innerHTML = '';
   const key = currentDate.toLocaleDateString('en-CA');
   if(!history[key]) history[key] = {};
+
   habits.forEach((h,i)=>{
     const done = history[key][h]||false;
     const div = document.createElement('div');
     div.className='habit';
-    div.draggable=true;
-    div.innerHTML=`<span ondblclick="editHabit('${h}')">${h}</span><button onclick="toggleHabit('${h}')">${done?'✓':'Done'}</button>`;
+
+    const span = document.createElement('span');
+    span.innerText = h;
+    span.addEventListener('dblclick',()=>editHabit(h));
+
+    const btn = document.createElement('button');
+    btn.innerText = done?'✓':'Done';
+    btn.addEventListener('click',()=>toggleHabit(h));
+
+    div.appendChild(span);
+    div.appendChild(btn);
+
+    div.draggable = true;
     div.addEventListener('dragstart',e=>{div.classList.add('dragging');});
     div.addEventListener('dragend',e=>{div.classList.remove('dragging');});
     div.addEventListener('dragover',e=>{
@@ -320,9 +331,9 @@ function renderMonth(){
     if(history[key]){
       const vals = Object.values(history[key]);
       const pct = vals.length ? vals.filter(Boolean).length/vals.length : 0;
-      if(pct>=0.75) div.classList.add('green');
-      else if(pct>=0.5) div.classList.add('orange');
-      else if(pct>0) div.classList.add('red');
+      if(pct >= 0.75) div.style.borderColor='var(--success)';
+      else if(pct >= 0.5) div.style.borderColor='var(--orange)';
+      else div.style.borderColor='var(--red)';
     }
     const todayKey = new Date().toLocaleDateString('en-CA');
     if(key===todayKey) div.classList.add('today');
@@ -335,7 +346,7 @@ function popConfetti(){
   for(let i=0;i<12;i++){
     const s = document.createElement('span');
     s.style.left = Math.random()*100+'%';
-    s.style.width='5px'; s.style.height='5px';
+    s.style.width='4px'; s.style.height='4px';
     s.style.setProperty('--h',Math.random()*360);
     c.appendChild(s);
     setTimeout(()=>s.remove(),1000);
